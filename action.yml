@@ -1,0 +1,66 @@
+name: 'BestDefense Vortex Scan'
+description: 'Trigger BestDefense security & performance scans on pull requests'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  api-key:
+    description: 'BestDefense Organization API key (Bearer token)'
+    required: true
+  target-id:
+    description: 'BestDefense target/site UUID'
+    required: true
+  target-url:
+    description: 'URL to scan (e.g., preview environment URL or staging URL)'
+    required: true
+  scan-types:
+    description: 'Comma-separated list of scan types: security, seo, dns, whois'
+    required: false
+    default: 'security'
+  intensity:
+    description: 'Scan intensity: quick | standard | thorough'
+    required: false
+    default: 'standard'
+  vortex-mode:
+    description: 'Scan engine mode: analog | ai'
+    required: false
+    default: 'analog'
+  fail-check-on:
+    description: 'Minimum severity level that fails the check: critical | high | medium | low | none'
+    required: false
+    default: 'high'
+  bestdefense-url:
+    description: |
+      BestDefense platform base URL.
+      Multi-tenant (default): https://app.bestdefense.io
+      Single-tenant example:   https://acme.bestdefense.io
+    required: false
+    default: 'https://app.bestdefense.io'
+  app-backend-url:
+    description: |
+      URL of the BestDefense GitHub App backend that handles scan registration.
+      Leave empty to use the same host as bestdefense-url (recommended for both
+      multi-tenant and single-tenant deployments).
+      Override only if your scan registration endpoint is on a separate host.
+    required: false
+    default: ''
+  github-token:
+    description: |
+      GitHub token used to create Check Runs and post PR comments.
+      Defaults to the built-in GITHUB_TOKEN. Override only if you need
+      elevated permissions (e.g. checks:write on a forked repo).
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  report-id:
+    description: 'BestDefense report UUID'
+  report-url:
+    description: 'URL to view the full report'
+  check-run-id:
+    description: 'GitHub Check Run ID'
+
+runs:
+  using: 'node20'
+  main: 'dist/main.js'
